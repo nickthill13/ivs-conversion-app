@@ -209,6 +209,10 @@ class MainWindow(QMainWindow):
                 border-top: 1px solid {border};
                 font-size: 10px;
                 color: {muted_text};
+                padding: 0 24px;
+            }}
+            QStatusBar QLabel {{
+                padding-right: 24px;
             }}
             QFrame#navbar {{
                 background: {surface};
@@ -241,10 +245,9 @@ class MainWindow(QMainWindow):
         layout.addWidget(self._make_log())
 
         bar = QStatusBar()
+        bar.setSizeGripEnabled(False)
         self.setStatusBar(bar)
-        self._status_lbl = QLabel("Ready")
         bar.addPermanentWidget(QLabel("Nicholas Thill  ·  2025  ·  Open Source"))
-        bar.addWidget(self._status_lbl)
 
     # ── Navbar ──────────────────────────────────────────────────────────────
     def _make_navbar(self) -> QFrame:
@@ -518,7 +521,6 @@ class MainWindow(QMainWindow):
         self._files = unique
 
         if not unique:
-            self._status_lbl.setText("No .IVS files found")
             return
 
         iva_n = sum(1 for f in unique if f.with_suffix(".iva").exists())
@@ -538,9 +540,6 @@ class MainWindow(QMainWindow):
             item.setForeground(2, QColor(SUCCESS) if has_iva else QColor("#475569"))
             self._tree.addTopLevelItem(item)
 
-        self._status_lbl.setText(
-            f"{len(unique)} files  ·  {iva_n} with markups  ·  {len(unique)-iva_n} without")
-
     def _write_log(self, msg: str):
         self._log.append(msg)
 
@@ -555,7 +554,6 @@ class MainWindow(QMainWindow):
         self._convert_btn.setEnabled(True)
         self._convert_btn.setText("Convert All  →")
         self._progress.setVisible(False)
-        self._status_lbl.setText(f"Done — {ok} exported, {err} failed")
 
     def _start_conversion(self):
         inp = self._in_edit.text().strip()
