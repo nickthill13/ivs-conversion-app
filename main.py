@@ -19,7 +19,7 @@ from PyQt6.QtWidgets import (
 
 from converter import convert_file
 
-GITHUB_URL = "https://github.com/nickthill/ivs-conversion-app"
+GITHUB_URL = "https://github.com/nickthill13/ivs-conversion-app"
 ACCENT     = "#2563EB"
 SUCCESS    = "#16A34A"
 ERROR      = "#DC2626"
