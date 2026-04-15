@@ -172,7 +172,7 @@ class MainWindow(QMainWindow):
                 background: {log_bg};
                 border: 1px solid {border};
                 border-radius: 8px;
-                font-family: monospace;
+                font-family: "Menlo", "Courier New", monospace;
                 font-size: 11px;
                 color: {"#94A3B8" if self._dark else "#475569"};
                 padding: 6px;
@@ -207,6 +207,7 @@ class MainWindow(QMainWindow):
             QCheckBox::indicator:checked {{
                 background: {ACCENT};
                 border: 1px solid {ACCENT};
+                image: url({str(Path(__file__).parent / "check.png").replace(chr(92), "/")});
             }}
             QProgressBar {{
                 border: none;
@@ -364,10 +365,14 @@ class MainWindow(QMainWindow):
         self._fmt_btns["PDF"].setChecked(True)
         self._selected_fmt = "PDF"
 
+        row2.addSpacing(20)
+
         sep = QFrame()
         sep.setFrameShape(QFrame.Shape.VLine)
-        sep.setStyleSheet("color: #334155; margin: 4px 16px;")
+        sep.setStyleSheet("color: #334155; margin: 4px 0px;")
         row2.addWidget(sep)
+
+        row2.addSpacing(20)
 
         self._markup_cb = QCheckBox("Apply IVA Markups")
         self._markup_cb.setChecked(True)
