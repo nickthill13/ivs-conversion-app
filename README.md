@@ -21,7 +21,7 @@ Built for construction and engineering professionals who need blueprints in a sh
 
 ## Background
 
-[Ipin Viewing System](https://www.ipin.com) is a legacy Windows application used by contractors and engineers to view and mark up blueprints. Its native export function is slow, unreliable, and lacks batch support.
+[Ipin Viewing System (IVS)](https://ivs.bxohio.com/) is a legacy Windows application used by contractors and engineers to view and mark up blueprints. Its native export function is slow, unreliable, and lacks batch support.
 
 This tool reverse-engineers the `.IVS` and `.IVA` file formats to provide a fast, modern export pipeline:
 
