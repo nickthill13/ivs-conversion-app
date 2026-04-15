@@ -8,6 +8,13 @@ import threading
 import webbrowser
 from pathlib import Path
 
+
+def resource_path(filename):
+    """Return absolute path to a bundled resource — works both from source and PyInstaller."""
+    if hasattr(sys, "_MEIPASS"):
+        return str(Path(sys._MEIPASS) / filename)
+    return str(Path(__file__).parent / filename)
+
 from PyQt6.QtCore import Qt, QThread, pyqtSignal, QObject
 from PyQt6.QtGui import QColor, QPalette, QFont, QIcon, QPixmap, QPainter
 import os
@@ -207,7 +214,7 @@ class MainWindow(QMainWindow):
             QCheckBox::indicator:checked {{
                 background: {ACCENT};
                 border: 1px solid {ACCENT};
-                image: url({str(Path(__file__).parent / "check.png").replace(chr(92), "/")});
+                image: url({resource_path("check.png").replace(chr(92), "/")});
             }}
             QProgressBar {{
                 border: none;
@@ -263,7 +270,7 @@ class MainWindow(QMainWindow):
         bar = QStatusBar()
         bar.setSizeGripEnabled(False)
         self.setStatusBar(bar)
-        bar.addPermanentWidget(QLabel("Nicholas Thill  ·  2025  ·  Open Source"))
+        bar.addPermanentWidget(QLabel("Nicholas Thill  ·  2026  ·  Open Source"))
 
     # ── Navbar ──────────────────────────────────────────────────────────────
     def _make_navbar(self) -> QFrame:
@@ -274,9 +281,9 @@ class MainWindow(QMainWindow):
         row.setContentsMargins(20, 0, 20, 0)
 
         # Logo
-        icon_path = Path(__file__).parent / "icon.png"
-        if icon_path.exists():
-            pix = QPixmap(str(icon_path)).scaled(
+        icon_path = resource_path("icon.png")
+        if Path(icon_path).exists():
+            pix = QPixmap(icon_path).scaled(
                 28, 28, Qt.AspectRatioMode.KeepAspectRatio,
                 Qt.TransformationMode.SmoothTransformation)
             ico_lbl = QLabel()
@@ -661,9 +668,9 @@ if __name__ == "__main__":
     app = QApplication(sys.argv)
     app.setStyle("Fusion")
 
-    icon_path = Path(__file__).parent / "icon.png"
-    if icon_path.exists():
-        app.setWindowIcon(QIcon(str(icon_path)))
+    icon_path = resource_path("icon.png")
+    if Path(icon_path).exists():
+        app.setWindowIcon(QIcon(icon_path))
 
     win = MainWindow()
     win.show()

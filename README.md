@@ -69,7 +69,7 @@ A green **IVA** badge next to a file means a matching markup overlay was found a
 
 ## Packaged Releases
 
-Standalone downloads (no Python required) coming soon for **macOS** and **Windows**.
+Download the [latest release](https://github.com/nickthill13/ivs-conversion-app/releases/latest) for **macOS** or **Windows** — no Python required.
 
 ---
 

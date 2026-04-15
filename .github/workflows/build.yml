@@ -62,4 +62,4 @@ jobs:
       - name: Upload to release
         uses: softprops/action-gh-release@v2
         with:
-          files: dist/IVS Conversion App.exe
+          files: "dist/IVS Conversion App.exe"
