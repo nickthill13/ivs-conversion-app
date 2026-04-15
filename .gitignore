@@ -8,6 +8,11 @@ github_pfp.png
 # Test output
 test_output*/
 
+# PyInstaller build artifacts
+build/
+dist/
+*.spec
+
 # Python
 __pycache__/
 *.pyc
