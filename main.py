@@ -10,11 +10,14 @@ from pathlib import Path
 
 from PyQt6.QtCore import Qt, QThread, pyqtSignal, QObject
 from PyQt6.QtGui import QColor, QPalette, QFont, QIcon, QPixmap, QPainter
+import os
+import subprocess
+
 from PyQt6.QtWidgets import (
     QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout,
     QLabel, QPushButton, QLineEdit, QFileDialog, QTreeWidget,
     QTreeWidgetItem, QTextEdit, QStatusBar, QFrame, QButtonGroup,
-    QSizePolicy, QProgressBar, QCheckBox,
+    QSizePolicy, QProgressBar, QCheckBox, QMessageBox,
 )
 
 from converter import convert_file
@@ -109,6 +112,7 @@ class MainWindow(QMainWindow):
         super().__init__()
         self._files: list[Path] = []
         self._dark = True
+        self._busy = False
         self._worker: Worker | None = None
         self._thread: QThread | None = None
 
@@ -192,6 +196,17 @@ class MainWindow(QMainWindow):
             QCheckBox {{
                 font-size: 12px;
                 spacing: 6px;
+            }}
+            QCheckBox::indicator {{
+                width: 16px;
+                height: 16px;
+                border: 1px solid {border};
+                border-radius: 4px;
+                background: {"#263347" if self._dark else "#F0F4F8"};
+            }}
+            QCheckBox::indicator:checked {{
+                background: {ACCENT};
+                border: 1px solid {ACCENT};
             }}
             QProgressBar {{
                 border: none;
@@ -367,6 +382,24 @@ class MainWindow(QMainWindow):
         self._progress.setVisible(False)
         row2.addWidget(self._progress)
         row2.addSpacing(12)
+
+        self._open_btn = QPushButton("Open Output  ↗")
+        self._open_btn.setFixedHeight(36)
+        self._open_btn.setFixedWidth(136)
+        self._open_btn.setVisible(False)
+        self._open_btn.setStyleSheet("""
+            QPushButton {
+                background: transparent;
+                border: 1px solid #334155;
+                border-radius: 8px;
+                color: #94A3B8;
+                font-size: 12px;
+            }
+            QPushButton:hover { background: #263347; color: #F1F5F9; }
+        """)
+        self._open_btn.clicked.connect(self._open_output_folder)
+        row2.addWidget(self._open_btn)
+        row2.addSpacing(8)
 
         self._convert_btn = QPushButton("Convert All  →")
         self._convert_btn.setFixedHeight(36)
@@ -554,8 +587,29 @@ class MainWindow(QMainWindow):
         self._convert_btn.setEnabled(True)
         self._convert_btn.setText("Convert All  →")
         self._progress.setVisible(False)
+        self._open_btn.setVisible(True)
+        self._busy = False
+
+    def _open_output_folder(self):
+        out = self._out_edit.text().strip()
+        if not out:
+            return
+        if sys.platform == "darwin":
+            subprocess.run(["open", out])
+        elif sys.platform == "win32":
+            os.startfile(out)
+        else:
+            subprocess.run(["xdg-open", out])
 
     def _start_conversion(self):
+        if self._busy:
+            msg = QMessageBox(self)
+            msg.setWindowTitle("Already Converting")
+            msg.setText("A conversion is already in progress.\nPlease wait for it to finish.")
+            msg.setIcon(QMessageBox.Icon.Warning)
+            msg.exec()
+            return
+
         inp = self._in_edit.text().strip()
         out = self._out_edit.text().strip()
 
@@ -569,12 +623,15 @@ class MainWindow(QMainWindow):
             self._write_log("⚠  No files loaded.")
             return
 
+        self._open_btn.setVisible(False)
+
         # Reset status column
         for i in range(self._tree.topLevelItemCount()):
             item = self._tree.topLevelItem(i)
             item.setText(3, "—")
             item.setForeground(3, QColor("#475569"))
 
+        self._busy = True
         self._convert_btn.setEnabled(False)
         self._convert_btn.setText("Converting…")
         self._progress.setVisible(True)
