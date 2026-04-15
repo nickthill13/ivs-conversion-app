@@ -1,8 +1,6 @@
 # IVS Conversion App
 
-A fast, free batch export tool for **Ipin Viewing System (IVS)** blueprint files. Convert `.IVS` blueprints — with or without `.IVA` markup overlays — to **PDF, TIFF, PNG, or JPEG** in one click.
-
-Built for construction and engineering professionals who need blueprints in a shareable format for Google Drive, field teams, or archiving.
+A simple free batch export tool for **Ipin Viewing System (IVS)** blueprint files. Convert `.IVS` blueprints — with or without `.IVA` markup overlays — to **PDF, TIFF, PNG, or JPEG** in one click.
 
 ![IVS Conversion App Screenshot](screenshot.png)
 
@@ -11,11 +9,10 @@ Built for construction and engineering professionals who need blueprints in a sh
 ## Features
 
 - **Batch convert** an entire folder of `.IVS` files at once
-- **IVA markup overlay** — automatically composites redline annotations onto the base blueprint
+- **IVA markup overlay** — quicker and faster exporting with overlay compared to native IVS
 - Export to **PDF, TIFF, PNG, JPEG**
-- Live per-file status — see each file convert in real time
 - Dark / Light mode toggle
-- Runs on **macOS and Windows**
+- Runs on **macOS and Windows** (Why would you even use this on MacOS when IVS is for windows 7?)
 
 ---
 
@@ -23,7 +20,7 @@ Built for construction and engineering professionals who need blueprints in a sh
 
 [Ipin Viewing System (IVS)](https://ivs.bxohio.com/) is a legacy Windows application used by contractors and engineers to view and mark up blueprints. Its native export function is slow, unreliable, and lacks batch support.
 
-This tool reverse-engineers the `.IVS` and `.IVA` file formats to provide a fast, modern export pipeline:
+This tool reverse-engineers the `.IVS` and `.IVA` file formats to provide a better and quicker tool for exporting and making IVS better for everyone around:
 
 - **`.IVS`** files are standard TIFF images with a renamed extension
 - **`.IVA`** files are text-based markup overlays containing polylines, revision markers, and annotation objects stored in a custom coordinate space that maps 1:1 to the image pixels
@@ -52,8 +49,8 @@ python main.py
 
 ## Usage
 
-1. Click **Browse** next to *Input Folder* and select a folder containing `.IVS` files
-2. Click **Browse** next to *Output Folder* and choose where exports will be saved
+1. Click **Browse** next to *Input Folder* and select a folder containing `.IVS` files (or type it if you're weird)
+2. Click **Browse** next to *Output Folder* and choose where exports will be saved (or type it if you're still weird)
 3. Select an export format — **PDF, TIFF, PNG, or JPEG**
 4. Toggle **Apply IVA Markups** on or off
 5. Click **Convert All**
@@ -81,7 +78,3 @@ Standalone downloads (no Python required) coming soon for **macOS** and **Window
 MIT License — free to use, modify, and distribute with credit.
 
 See [LICENSE](LICENSE) for full terms.
-
----
-
-Built by [Nicholas Thill](https://github.com/nickthill13)
