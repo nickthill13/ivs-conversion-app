@@ -1,1 +1,25 @@
+# Sample project files — client data, never commit
+2025-*/
 
+# Profile pic generator — personal, not part of the app
+make_pfp.py
+github_pfp.png
+
+# Test output
+test_output*/
+
+# PyInstaller build artifacts
+build/
+dist/
+*.spec
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# macOS
+.DS_Store
+
+# Claude
+.claude/
