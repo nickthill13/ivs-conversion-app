@@ -28,6 +28,11 @@ jobs:
             --icon icon.ico \
             --add-data "icon.png:." \
             --add-data "check.png:." \
+            --collect-all PIL \
+            --collect-all reportlab \
+            --hidden-import PIL.TiffImagePlugin \
+            --hidden-import PIL.PngImagePlugin \
+            --hidden-import PIL.JpegImagePlugin \
             main.py
 
       - name: Zip .app
@@ -60,6 +65,11 @@ jobs:
             --icon icon.ico `
             --add-data "icon.png;." `
             --add-data "check.png;." `
+            --collect-all PIL `
+            --collect-all reportlab `
+            --hidden-import PIL.TiffImagePlugin `
+            --hidden-import PIL.PngImagePlugin `
+            --hidden-import PIL.JpegImagePlugin `
             main.py
 
       - name: Upload to release
