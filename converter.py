@@ -1,16 +1,5 @@
-"""
-converter.py — IVS Conversion App
-Core conversion logic.
-
-.IVS  = TIFF image (renamed)
-.IVA  = text-based annotation overlay (same stem as .IVS)
-
-Workflow:
-  1. Open .IVS as TIFF via Pillow
-  2. Parse matching .IVA if present
-  3. Draw annotations onto the image
-  4. Export to TIFF / PNG / JPEG / PDF
-"""
+# IVS Conversion App — converter.py
+# .IVS = TIFF image (renamed), .IVA = text-based annotation overlay
 
 import io
 from pathlib import Path
@@ -18,10 +7,7 @@ from PIL import Image, ImageDraw
 from reportlab.pdfgen import canvas as pdf_canvas
 
 
-# ---------------------------------------------------------------------------
-# Color conversion
-# Windows COLORREF = 0x00BBGGRR stored as a plain integer
-# ---------------------------------------------------------------------------
+# Color conversion — Windows COLORREF = 0x00BBGGRR
 def colorref_to_rgb(value: int) -> tuple[int, int, int]:
     r = value & 0xFF
     g = (value >> 8) & 0xFF
@@ -29,11 +15,8 @@ def colorref_to_rgb(value: int) -> tuple[int, int, int]:
     return (r, g, b)
 
 
-# ---------------------------------------------------------------------------
 # IVA parser
-# ---------------------------------------------------------------------------
 def parse_iva(path: str) -> list[dict]:
-    """Return a list of annotation objects parsed from an .IVA file."""
     with open(path, "r", encoding="utf-8", errors="replace") as f:
         lines = [ln.rstrip("\n") for ln in f]
 
@@ -105,18 +88,15 @@ def _read_object(lines: list[str], start: int) -> tuple[dict, int]:
     return obj, i
 
 
-# ---------------------------------------------------------------------------
 # Annotation renderer
-# ---------------------------------------------------------------------------
 def render_annotations(image: Image.Image, annotations: list[dict]) -> Image.Image:
-    """Composite IVA annotations onto the image. Returns an RGBA image."""
     img = image.convert("RGBA")
     overlay = Image.new("RGBA", img.size, (0, 0, 0, 0))
     draw = ImageDraw.Draw(overlay)
 
     for obj in annotations:
         obj_type = obj.get("type")
-        if obj_type == 0:           # canvas descriptor — skip
+        if obj_type == 0:  # canvas descriptor — skip
             continue
         if not obj.get("visible", 1):
             continue
@@ -152,9 +132,7 @@ def render_annotations(image: Image.Image, annotations: list[dict]) -> Image.Ima
     return Image.alpha_composite(img, overlay)
 
 
-# ---------------------------------------------------------------------------
 # Export
-# ---------------------------------------------------------------------------
 def export_image(image: Image.Image, output_path: str, fmt: str) -> None:
     fmt = fmt.upper()
     if fmt == "PDF":
@@ -178,9 +156,7 @@ def _export_pdf(image: Image.Image, output_path: str) -> None:
     c.save()
 
 
-# ---------------------------------------------------------------------------
 # Public API
-# ---------------------------------------------------------------------------
 def convert_file(
     ivs_path: str,
     output_dir: str,
@@ -188,10 +164,7 @@ def convert_file(
     include_markups: bool = True,
     progress_callback=None,
 ) -> str:
-    """
-    Convert a single .IVS (+ optional .IVA) to the target format.
-    Returns the output file path.
-    """
+    """Convert a single .IVS (+ optional .IVA) to the target format. Returns output path."""
     def log(msg):
         if progress_callback:
             progress_callback(msg)
@@ -227,7 +200,6 @@ def convert_folder(
     include_markups: bool = True,
     progress_callback=None,
 ) -> list[str]:
-    """Batch convert all .IVS files in a folder."""
     input_dir = Path(input_dir)
     ivs_files = sorted(input_dir.glob("*.ivs")) + sorted(input_dir.glob("*.IVS"))
 

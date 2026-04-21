@@ -1,7 +1,4 @@
-"""
-main.py — IVS Conversion App
-Built by Nicholas Thill
-"""
+# IVS Conversion App — main.py
 
 import sys
 import threading
@@ -10,7 +7,7 @@ from pathlib import Path
 
 
 def resource_path(filename):
-    """Return absolute path to a bundled resource — works both from source and PyInstaller."""
+    # Resolves paths for both source and PyInstaller bundles
     if hasattr(sys, "_MEIPASS"):
         return str(Path(sys._MEIPASS) / filename)
     return str(Path(__file__).parent / filename)
@@ -36,9 +33,7 @@ ERROR      = "#DC2626"
 WARN       = "#D97706"
 
 
-# ---------------------------------------------------------------------------
 # Palettes
-# ---------------------------------------------------------------------------
 def dark_palette() -> QPalette:
     p = QPalette()
     p.setColor(QPalette.ColorRole.Window,          QColor("#0F172A"))
@@ -73,13 +68,11 @@ def light_palette() -> QPalette:
     return p
 
 
-# ---------------------------------------------------------------------------
-# Conversion worker (runs on a background thread, signals back to UI)
-# ---------------------------------------------------------------------------
+# Worker
 class Worker(QObject):
     log     = pyqtSignal(str)
-    status  = pyqtSignal(int, str)   # (row_index, status_text)
-    done    = pyqtSignal(int, int)   # (ok_count, err_count)
+    status  = pyqtSignal(int, str)  # row_index, status_text
+    done    = pyqtSignal(int, int)  # ok_count, err_count
 
     def __init__(self, files: list[Path], output_dir: str, fmt: str, markups: bool):
         super().__init__()
@@ -111,9 +104,7 @@ class Worker(QObject):
         self.done.emit(ok, err)
 
 
-# ---------------------------------------------------------------------------
 # Main window
-# ---------------------------------------------------------------------------
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -130,9 +121,6 @@ class MainWindow(QMainWindow):
         self._apply_theme()
         self._build()
 
-    # -----------------------------------------------------------------------
-    # Theme
-    # -----------------------------------------------------------------------
     def _apply_theme(self):
         QApplication.instance().setPalette(
             dark_palette() if self._dark else light_palette()
@@ -252,9 +240,6 @@ class MainWindow(QMainWindow):
         self._apply_theme()
         self._mode_btn.setText("☀  Light" if self._dark else "🌙  Dark")
 
-    # -----------------------------------------------------------------------
-    # Build UI
-    # -----------------------------------------------------------------------
     def _build(self):
         root = QWidget()
         self.setCentralWidget(root)
@@ -471,9 +456,6 @@ class MainWindow(QMainWindow):
         layout.addWidget(self._log)
         return container
 
-    # -----------------------------------------------------------------------
-    # Widget helpers
-    # -----------------------------------------------------------------------
     def _ghost_btn(self, text: str) -> QPushButton:
         b = QPushButton(text)
         b.setFixedHeight(30)
@@ -536,9 +518,6 @@ class MainWindow(QMainWindow):
             }}
             QPushButton:hover {{ background: #263347; color: #F1F5F9; }}"""
 
-    # -----------------------------------------------------------------------
-    # Actions
-    # -----------------------------------------------------------------------
     def _browse_input(self):
         d = QFileDialog.getExistingDirectory(self, "Select Input Folder")
         if d:
@@ -663,7 +642,6 @@ class MainWindow(QMainWindow):
         self._thread.start()
 
 
-# ---------------------------------------------------------------------------
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     app.setStyle("Fusion")
